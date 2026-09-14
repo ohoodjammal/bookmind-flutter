@@ -39,7 +39,6 @@ dependencies:
   shared_preferences: ^2.5.3
   # changed: provide native book sharing.
   share_plus: ^10.1.4
-  web: ^1.1.1 # changed: use the browser Web Share API.
 
 dev_dependencies:
   flutter_test:

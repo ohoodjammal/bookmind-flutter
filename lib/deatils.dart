@@ -1,15 +1,11 @@
 import 'dart:convert';
-import 'dart:js_interop'; // changed: await the browser Share API promise.
-import 'dart:js_interop_unsafe'; // changed: detect optional browser APIs.
+
 import 'package:books_app/disc.dart';
 import 'package:books_app/favorites.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart'; // changed: detect Chrome/Web.
-import 'package:flutter/services.dart'; // changed: copy the URL on Web fallback.
 import 'package:http/http.dart' as http;
-import 'package:share_plus/share_plus.dart'; // changed: share through Android's native sheet.
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:web/web.dart' as web; // changed: access the browser Web Share API.
 
 class Deatils extends StatefulWidget {
   final dynamic id;
@@ -89,33 +85,15 @@ class _DeatilsState extends State<Deatils> {
     }
   }
 
-  // changed: share the title and existing book URL without opening the URL.
+  // changed: share the book title and URL using share_plus.
   Future<void> _shareBook() async {
     final bookUrl = myData['url']?.toString();
+
     if (bookUrl == null || bookUrl.isEmpty) {
       return;
     }
 
     final title = myData['title']?.toString() ?? 'BookMind book'; // changed
-    if (kIsWeb) {
-      final shareData = web.ShareData(title: title, url: bookUrl); // changed
-      final navigator = web.window.navigator; // changed
-      final hasShareApi = navigator.has('share'); // changed
-      final canShare = !navigator.has('canShare') || // changed
-          navigator.canShare(shareData); // changed
-      if (hasShareApi && canShare) { // changed
-        await navigator.share(shareData).toDart; // changed
-        return; // changed
-      }
-
-      await Clipboard.setData(ClipboardData(text: bookUrl)); // changed
-      if (mounted) { // changed
-        ScaffoldMessenger.of(context).showSnackBar( // changed
-          const SnackBar(content: Text('Book link copied!')), // changed
-        ); // changed
-      }
-      return; // changed
-    }
 
     await Share.share('$title\n$bookUrl'); // changed
   }
@@ -131,7 +109,11 @@ class _DeatilsState extends State<Deatils> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     if (errorMessage != null) {
@@ -141,9 +123,12 @@ class _DeatilsState extends State<Deatils> {
           title: const Text('Error'),
         ),
 
-        // changed: ErrorView is now inside this file
+        // changed: ErrorView is now inside this file.
         // changed: keep detail errors themed while preserving retry.
-        body: ErrorView(message: errorMessage!, onRetry: getId),
+        body: ErrorView(
+          message: errorMessage!,
+          onRetry: getId,
+        ),
       );
     }
 
@@ -170,19 +155,29 @@ class _DeatilsState extends State<Deatils> {
         backgroundColor: const Color.fromARGB(255, 198, 115, 70),
 
         actions: [
-          // changed: add sharing without changing the existing details layout.
+          // changed: share button
           IconButton(
             tooltip: 'Share book',
-            icon: const Icon(Icons.share, color: Colors.white),
+            icon: const Icon(
+              Icons.share,
+              color: Colors.white,
+            ),
             onPressed: _shareBook,
           ),
+
           // changed: favorite button
           IconButton(
-            tooltip: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+            tooltip: isFavorite
+                ? 'Remove from favorites'
+                : 'Add to favorites',
 
             icon: Icon(
-              isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: isFavorite ? Colors.red : Colors.white,
+              isFavorite
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: isFavorite
+                  ? Colors.red
+                  : Colors.white,
             ),
 
             onPressed: _toggleFavorite,
@@ -193,12 +188,18 @@ class _DeatilsState extends State<Deatils> {
 
         title: const Text(
           'Book Details',
-          style: TextStyle(color: Color.fromARGB(255, 255, 244, 229)),
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 244, 229),
+          ),
         ),
       ),
 
       body: ListView(
-        padding: const EdgeInsets.only(top: 20, left: 16, right: 16),
+        padding: const EdgeInsets.only(
+          top: 20,
+          left: 16,
+          right: 16,
+        ),
 
         children: [
           Row(
@@ -239,19 +240,27 @@ class _DeatilsState extends State<Deatils> {
 
                     Row(
                       children: [
-                        const Icon(Icons.calendar_month_sharp),
+                        const Icon(
+                          Icons.calendar_month_sharp,
+                        ),
 
                         const SizedBox(width: 5),
 
-                        Text(myData['year']?.toString() ?? ''),
+                        Text(
+                          myData['year']?.toString() ?? '',
+                        ),
 
                         const SizedBox(width: 10),
 
-                        const Icon(Icons.difference_rounded),
+                        const Icon(
+                          Icons.difference_rounded,
+                        ),
 
                         const SizedBox(width: 5),
 
-                        Text(myData['pages']?.toString() ?? ''),
+                        Text(
+                          myData['pages']?.toString() ?? '',
+                        ),
                       ],
                     ),
 
@@ -260,8 +269,12 @@ class _DeatilsState extends State<Deatils> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-
-                        color: const Color.fromARGB(255, 198, 115, 70),
+                        color: const Color.fromARGB(
+                          255,
+                          198,
+                          115,
+                          70,
+                        ),
                       ),
 
                       child: const Padding(
@@ -272,7 +285,9 @@ class _DeatilsState extends State<Deatils> {
 
                         child: Text(
                           'Genre : Fiction',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -286,12 +301,16 @@ class _DeatilsState extends State<Deatils> {
 
           const Text(
             'description',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
 
           const SizedBox(height: 7),
 
-          Text(myData['description'] ?? ''),
+          Text(
+            myData['description'] ?? '',
+          ),
 
           TextButton(
             onPressed: () {
@@ -299,15 +318,19 @@ class _DeatilsState extends State<Deatils> {
                 context,
 
                 MaterialPageRoute(
-                  builder: (context) =>
-                      Disc(description: myData['description'] ?? ''),
+                  builder: (context) => Disc(
+                    description:
+                        myData['description'] ?? '',
+                  ),
                 ),
               );
             },
 
             child: const Text(
               'Read More',
-              style: TextStyle(color: Color.fromARGB(255, 198, 115, 70)),
+              style: TextStyle(
+                color: Color.fromARGB(255, 198, 115, 70),
+              ),
             ),
           ),
 
@@ -327,15 +350,24 @@ class _DeatilsState extends State<Deatils> {
                 children: const [
                   Text(
                     'Publisher',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
                   Text(
                     'Publisher Date',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
-                  Text('ISBN', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'ISBN',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
 
@@ -345,11 +377,17 @@ class _DeatilsState extends State<Deatils> {
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
-                  Text(myData['publisher'] ?? ''),
+                  Text(
+                    myData['publisher'] ?? '',
+                  ),
 
-                  Text(myData['year']?.toString() ?? ''),
+                  Text(
+                    myData['year']?.toString() ?? '',
+                  ),
 
-                  Text(myData['id']?.toString() ?? ''),
+                  Text(
+                    myData['id']?.toString() ?? '',
+                  ),
                 ],
               ),
             ],
@@ -359,21 +397,36 @@ class _DeatilsState extends State<Deatils> {
 
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 198, 115, 70),
+              backgroundColor: const Color.fromARGB(
+                255,
+                198,
+                115,
+                70,
+              ),
             ),
 
             onPressed: () async {
               if (myData['url'] != null) {
-                final url = Uri.parse(myData['url']);
+                final url = Uri.parse(
+                  myData['url'],
+                );
 
                 await launchUrl(url);
               }
             },
 
             child: const ListTile(
-              leading: Icon(Icons.menu_book, color: Colors.white),
+              leading: Icon(
+                Icons.menu_book,
+                color: Colors.white,
+              ),
 
-              title: Text('View Book', style: TextStyle(color: Colors.white)),
+              title: Text(
+                'View Book',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
 
@@ -384,29 +437,47 @@ class _DeatilsState extends State<Deatils> {
   }
 }
 
-// changed: ErrorView is now independent from Favorites
+// changed: ErrorView is now independent from Favorites.
 class ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const ErrorView({super.key, required this.message, required this.onRetry});
+  const ErrorView({
+    super.key,
+    required this.message,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
+
         child: Column(
           mainAxisSize: MainAxisSize.min,
+
           children: [
             const Icon(
               Icons.cloud_off,
               size: 64,
-              color: Color.fromARGB(255, 198, 115, 70),
+              color: Color.fromARGB(
+                255,
+                198,
+                115,
+                70,
+              ),
             ),
+
             const SizedBox(height: 16),
-            Text(message, textAlign: TextAlign.center),
+
+            Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+
             const SizedBox(height: 16),
+
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
