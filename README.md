@@ -33,15 +33,15 @@ Book data is provided by the dBooks API.
 
 ## Screenshots
 
-![Screenshot 1](assets/images/screenshot1.png)
+![Screenshot 1](assets/images/Screenshot%202026-09-14%20142943.png)
 
-![Screenshot 2](assets/images/screenshot2.png)
+![Screenshot 2](assets/images/Screenshot%202026-09-14%20143015.png)
 
-![Screenshot 3](assets/images/screenshot3.png)
+![Screenshot 3](assets/images/Screenshot%202026-09-14%20143055.png)
 
-![Screenshot 4](assets/images/screenshot4.png)
+![Screenshot 4](assets/images/Screenshot%202026-09-14%20143138.png)
 
-![Screenshot 5](assets/images/screenshot5.png)
+![Screenshot 5](assets/images/Screenshot%202026-09-14%20143226.png)
 
 ## What I Practiced
 
