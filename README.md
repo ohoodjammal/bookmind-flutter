@@ -33,6 +33,8 @@ Book data is provided by the dBooks API.
 
 ## Screenshots
 
+<div align="center">
+
 <p>
   <img src="book_images/Screenshot%202026-09-14%20142943.png" width="250">
   <img src="book_images/Screenshot%202026-09-14%20143015.png" width="250">
@@ -43,6 +45,8 @@ Book data is provided by the dBooks API.
   <img src="book_images/Screenshot%202026-09-14%20143138.png" width="250">
   <img src="book_images/Screenshot%202026-09-14%20143226.png" width="250">
 </p>
+
+</div>
 ## What I Practiced
 
 Through this project, I practiced:
