@@ -42,7 +42,6 @@ Book data is provided by the dBooks API.
 ![Screenshot 4](./assets/images/Screenshot%202026-09-14%20143138.png)
 
 ![Screenshot 5](./assets/images/Screenshot%202026-09-14%20143226.png)
-
 ## What I Practiced
 
 Through this project, I practiced:
